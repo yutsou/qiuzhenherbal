@@ -1,0 +1,247 @@
+@import url(https://fonts.googleapis.com/earlyaccess/cwtexkai.css);
+
+@font-face {
+    font-family: 'cwTeXKai';
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+  }
+
+  .separator::before,
+  .separator::after {
+    content: '';
+    flex: 1;
+    border-top: 1px solid #e5e5e5;
+  }
+
+  .separator:not(:empty)::before {
+    margin-right: .25em;
+  }
+
+  .separator:not(:empty)::after {
+    margin-left: .25em;
+  }
+
+  .fixed-top {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+}
+
+.custom-color-1 {
+    color: #ee782e;
+}
+
+.custom-color-2 {
+    color: #4c8c74;
+}
+
+.custom-color-group-1 {
+    background-color: #ee782e;
+    color: #fff;
+}
+
+.custom-card-color-group-1 {
+    background-color: #ee782e;
+    color: #fff;
+}
+
+.custom-card-color-group-2 {
+    background-color: #4c8c74;
+    color: #fff;
+}
+
+.custom-link {
+    color: #ee782e;
+    text-decoration: none;
+}
+
+.custom-link:hover {
+    color: #ec6613;
+    text-decoration: none;
+}
+
+.custom-link-2 {
+    color: #fff;
+    text-decoration: none;
+}
+
+.custom-link-2:hover {
+    color: #bbbbbb;
+    text-decoration: none;
+}
+
+.custom-active {
+    color: #ee782e !important;
+}
+
+.custom-button-1 {
+    background-color: #ee782e;
+    color: white;
+}
+
+.custom-button-1:hover {
+    background-color: #ec6613;
+    color: white;
+    text-decoration: none;
+}
+
+.custom-button-2 {
+    background-color: #4c8c74;
+    color: white;
+}
+
+.custom-button-2:hover {
+    background-color: #105038;
+    color: white;
+    text-decoration: none;
+}
+
+.custom-label-1 {
+    border: 1px solid #ec6613;
+    background-color: #fff;
+    color: #ee782e;
+}
+
+.custom-label-2 {
+    border: 1px solid #888;
+    background-color: #fff;
+    color: #888;
+}
+
+
+.custom-mute-lnk, .custom-mute-lnk:hover, .custom-mute-lnk:focus, .custom-mute-lnk:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+.image-no-known[src=""] {
+    display:none;
+}
+
+.test-button-1 {
+    background-color: #ae041e;
+    color: white;
+}
+.test-button-1:hover {
+    background-color: #000;
+    color: white;
+    text-decoration: none;
+}
+
+.justify-center {
+    display: flex;
+    justify-content: center;
+}
+
+.uk-tab>.uk-active>a {
+    border-color: #ee782e;
+}
+
+.product-card:hover {
+    box-shadow: 0 5px 25px rgb(0 0 0 / 8%);
+
+    bottom:5px;
+}
+
+.videobox {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+}
+
+.videobox iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.swal2-loading {
+    justify-content: center !important;
+}
+
+/* Just for example */
+
+
+/* -----------------------------
+Switch */
+
+.uk-switch {
+    position: relative;
+    display: inline-block;
+    height: 34px;
+    width: 60px;
+}
+
+/* Hide default HTML checkbox */
+.uk-switch input {
+    display:none;
+}
+/* Slider */
+.uk-switch-slider {
+    background-color: rgba(0,0,0,0.22);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-radius: 500px;
+    bottom: 0;
+    cursor: pointer;
+    transition-property: background-color;
+    transition-duration: .2s;
+    box-shadow: inset 0 0 2px rgba(0,0,0,0.07);
+}
+/* Switch pointer */
+.uk-switch-slider:before {
+    content: '';
+    background-color: #fff;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    left: 2px;
+    bottom: 2px;
+    border-radius: 50%;
+    transition-property: transform, box-shadow;
+    transition-duration: .2s;
+}
+/* Slider active color */
+input:checked + .uk-switch-slider {
+    background-color: #39f !important;
+}
+/* Pointer active animation */
+input:checked + .uk-switch-slider:before {
+    transform: translateX(26px);
+}
+
+/* Modifiers */
+.uk-switch-slider.uk-switch-on-off {
+    background-color: #f0506e;
+}
+input:checked + .uk-switch-slider.uk-switch-on-off {
+    background-color: #32d296 !important;
+}
+
+/* Style Modifier */
+.uk-switch-slider.uk-switch-big:before {
+    transform: scale(1.2);
+    box-shadow: 0 0 6px rgba(0,0,0,0.22);
+}
+.uk-switch-slider.uk-switch-small:before {
+    box-shadow: 0 0 6px rgba(0,0,0,0.22);
+}
+input:checked + .uk-switch-slider.uk-switch-big:before {
+    transform: translateX(26px) scale(1.2);
+}
+
+/* Inverse Modifier - affects only default */
+.uk-light .uk-switch-slider:not(.uk-switch-on-off) {
+    background-color: rgba(255,255,255,0.22);
+}
