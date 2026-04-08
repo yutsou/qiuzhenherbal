@@ -10,6 +10,9 @@
 
                     <ul class="uk-slideshow-items">
                         <li>
+                            <img src="{{ asset("/images/web/banners/banner-3-1.jpg") }}">
+                        </li>
+                        <li>
                             <img src="{{ asset("/images/web/banners/banner-2-1.jpg") }}">
                         </li>
                         <li>
@@ -32,6 +35,9 @@
                 <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
 
                     <ul class="uk-slideshow-items">
+                        <li>
+                            <img src="{{ asset("/images/web/banners/banner-3-1-m.jpg") }}">
+                        </li>
                         <li>
                             <img src="{{ asset("/images/web/banners/banner-2-1-m.jpg") }}">
                         </li>
@@ -132,7 +138,7 @@
             <div class="uk-child-width-1-2@s uk-grid-medium uk-grid-match" uk-grid>
                 <div>
                     <div class="uk-card uk-card-body">
-                        
+
                         <h3 class="uk-card-title">其他優惠</h3>
                         <ul class="uk-list">
                             <li>
