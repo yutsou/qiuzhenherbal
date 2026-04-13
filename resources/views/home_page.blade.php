@@ -10,7 +10,7 @@
 
                     <ul class="uk-slideshow-items">
                         <li>
-                            <img src="{{ asset("/images/web/banners/banner-3-1.jpg") }}">
+                            <img src="{{ asset("/images/web/banners/banner-3-2.jpg") }}">
                         </li>
                         <li>
                             <img src="{{ asset("/images/web/banners/banner-2-1.jpg") }}">
@@ -36,7 +36,7 @@
 
                     <ul class="uk-slideshow-items">
                         <li>
-                            <img src="{{ asset("/images/web/banners/banner-3-1-m.jpg") }}">
+                            <img src="{{ asset("/images/web/banners/banner-3-2-m.jpg") }}">
                         </li>
                         <li>
                             <img src="{{ asset("/images/web/banners/banner-2-1-m.jpg") }}">
