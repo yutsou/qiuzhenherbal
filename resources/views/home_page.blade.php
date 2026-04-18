@@ -30,7 +30,7 @@
             </div>
         </div>
         <div class="uk-hidden@m">
-            <div uk-slideshow="animation: slide; min-height:480; max-height: 480">
+            <div uk-slideshow="animation: slide; min-height:580; max-height: 780">
 
                 <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
 
