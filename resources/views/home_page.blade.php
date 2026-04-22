@@ -10,6 +10,9 @@
 
                     <ul class="uk-slideshow-items">
                         <li>
+                            <img src="{{ asset("/images/web/banners/banner_mothers_day_v4.jpg") }}">
+                        </li>
+                        <li>
                             <img src="{{ asset("/images/web/banners/banner-3-2.jpg") }}">
                         </li>
                         <li>
@@ -35,6 +38,9 @@
                 <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
 
                     <ul class="uk-slideshow-items">
+                        <li>
+                            <img src="{{ asset("/images/web/banners/banner_mothers_day_m_v4.jpg") }}">
+                        </li>
                         <li>
                             <img src="{{ asset("/images/web/banners/banner-3-2-m.jpg") }}">
                         </li>
