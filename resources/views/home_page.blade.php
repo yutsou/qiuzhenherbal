@@ -1,25 +1,36 @@
 @extends('layouts.general_member')
 @inject('shopPresenter', 'App\Presenters\ShopPresenter')
+
+@push('style')
+<style>
+    .banner-img-contain {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+    }
+</style>
+@endpush
+
 @section('sub-content')
 
     <div class="uk-text-center">
         <div class="uk-visible@m">
-            <div uk-slideshow="animation: slide; min-height:480; max-height: 960">
+            <div uk-slideshow="animation: slide; ratio: false">
 
                 <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
 
-                    <ul class="uk-slideshow-items">
+                    <ul class="uk-slideshow-items" uk-height-viewport="offset-top: true">
                         <li>
-                            <img src="{{ asset("/images/web/banners/banner-4-2.jpg") }}">
+                            <img src="{{ asset("/images/web/banners/banner-4-2.jpg") }}" class="banner-img-contain">
                         </li>
                         <li>
-                            <img src="{{ asset("/images/web/banners/banner-3-2.jpg") }}">
+                            <img src="{{ asset("/images/web/banners/banner-3-2.jpg") }}" class="banner-img-contain">
                         </li>
                         <li>
-                            <img src="{{ asset("/images/web/banners/banner-2-1.jpg") }}">
+                            <img src="{{ asset("/images/web/banners/banner-2-1.jpg") }}" class="banner-img-contain">
                         </li>
                         <li>
-                            <img src="{{ asset("/images/web/banners/banner-1-1.jpg") }}">
+                            <img src="{{ asset("/images/web/banners/banner-1-1.jpg") }}" class="banner-img-contain">
                         </li>
                     </ul>
 
@@ -38,6 +49,7 @@
                 <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
 
                     <ul class="uk-slideshow-items">
+                        <li>
                             <img src="{{ asset("/images/web/banners/banner-4-2-m.jpg") }}">
                         </li>
                         <li>
