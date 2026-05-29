@@ -1,7 +1,6 @@
-@import url(https://fonts.googleapis.com/earlyaccess/cwtexkai.css);
-
 @font-face {
     font-family: 'cwTeXKai';
+    src: url('../fonts/cwTeXKai.ttf') format('truetype');
 }
 
 .separator {

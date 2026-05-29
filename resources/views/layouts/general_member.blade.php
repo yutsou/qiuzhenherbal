@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <title>{{ $title ?? env("APP_NAME") }}</title>
-        <!-- version: {{ $version = '28' }} -->
+        <!-- version: {{ $version = '29' }} -->
 
         <!-- Meta -->
         <meta charset="utf-8">
@@ -110,8 +110,8 @@
                         <div class="uk-navbar-center ">
                             <form method="POST" action="{{ route('shop.products.search') }}" class="uk-flex uk-flex-middle" style="gap: 10px;">
                                 @csrf
-                                <input class="uk-input" 
-                                    type="text" 
+                                <input class="uk-input"
+                                    type="text"
                                     name="keyword"
                                     style="flex:1; min-width: 380px;">
                                 <button class="uk-button custom-color-group-1">搜尋</button>
