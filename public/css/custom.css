@@ -79,6 +79,13 @@
     color: #ee782e !important;
 }
 
+.mobile-menu .uk-nav-default > li > a,
+.mobile-menu .uk-nav-sub > li > a,
+.mobile-menu .uk-nav-header,
+.mobile-menu .uk-nav-center a {
+    font-size: 1.1rem;
+}
+
 .custom-button-1 {
     background-color: #ee782e;
     color: white;

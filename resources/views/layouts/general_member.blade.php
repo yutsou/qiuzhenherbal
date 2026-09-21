@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <title>{{ $title ?? env("APP_NAME") }}</title>
-        <!-- version: {{ $version = '29' }} -->
+        <!-- version: {{ $version = '30' }} -->
 
         <!-- Meta -->
         <meta charset="utf-8">
@@ -164,7 +164,7 @@
                     </nav>
 
 
-                    <div id="toggle-animation" class="uk-card uk-card-default uk-card-body" hidden>
+                    <div id="toggle-animation" class="uk-card uk-card-default uk-card-body mobile-menu" hidden>
                         <ul class="uk-nav-default" uk-nav>
                             <li class="uk-padding" >
                                 <form method="POST" action="{{ route('shop.products.search') }}" class="uk-grid-small" uk-grid>
