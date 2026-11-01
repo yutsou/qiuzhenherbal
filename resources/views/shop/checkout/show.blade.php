@@ -131,6 +131,11 @@
                                 <span id="totalDisplay">{{ number_format($cartSubtotal) }}</span>
                             </td>
                         </tr>
+                        <tr id="double11RewardTr" hidden>
+                            <td colspan="2" class="uk-text-right" style="color: #ee782e; font-size: 0.9em; padding-top: 6px;">
+                                <span id="double11RewardText"></span>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -190,6 +195,13 @@
                                     {!! $shopPresenter->presentCoupons(Auth::user()->unusedUnexpiredCoupons) !!}
                                 @endauth
                             </select>
+                            <div id="couponCountWrapper" class="uk-margin-small-top" hidden>
+                                <label class="uk-form-label" style="font-size: 0.9em; color: #666;">使用張數：</label>
+                                <select class="uk-select" id="couponCount" name="couponCount">
+                                    <option value="1">1 張 (- NT$100)</option>
+                                </select>
+                                <div id="couponThresholdHint" class="uk-text-meta uk-margin-xsmall-top" style="color: #0c80df; font-size: 0.85em;"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="uk-width-1-3@m">
@@ -213,14 +225,44 @@
             </div>
         </div>
         <div class="uk-margin uk-align-right">
-
-                <a class="uk-button uk-button-large custom-button-1" id="checkout">結帳</a>
-
+            <a class="uk-button uk-button-large custom-button-1" id="checkout">結帳</a>
         </div>
     </form>
 @endsection
 @push('scripts')
     <script>
+        @php
+            $double11Enabled = config('promotions.double_11.enabled', true);
+            $double11StartAt = \Carbon\Carbon::parse(config('promotions.double_11.start_at'));
+            $double11EndAt = \Carbon\Carbon::parse(config('promotions.double_11.end_at'));
+            $isDouble11Active = $double11Enabled && \Carbon\Carbon::now()->between($double11StartAt, $double11EndAt);
+            $double11Threshold = config('promotions.double_11.reward_threshold', 1500);
+        @endphp
+        let double11Active = {{ $isDouble11Active ? 'true' : 'false' }};
+        let double11Threshold = {{ $double11Threshold }};
+        let isUserAuth = {{ Auth::check() ? 'true' : 'false' }};
+
+        let updateDouble11RewardHint = function (total, deliveryFee) {
+            if (!double11Active) {
+                return;
+            }
+            let actualProductPaid = parseInt(total) - (parseInt(deliveryFee) || 0);
+            let giftCount = Math.floor(Math.max(0, actualProductPaid) / double11Threshold);
+
+            if (giftCount >= 1) {
+                let msg = '';
+                if (isUserAuth) {
+                    msg = '雙11滿額贈：本單商品實付滿額，訂單完成後將贈送 ' + giftCount + ' 張 100 元折價券（下次消費折抵）';
+                } else {
+                    msg = '雙11滿額贈：本單商品實付滿額，登入會員結帳且訂單完成後即可獲得 ' + giftCount + ' 張 100 元折價券（下次消費折抵）';
+                }
+                $('#double11RewardText').text(msg);
+                $('#double11RewardTr').prop('hidden', false);
+            } else {
+                $('#double11RewardTr').prop('hidden', true);
+            }
+        };
+
         let flashTotal = function () {
             let sutotal = $('#subtotal').val();
             let deliveryFee = $('#deliveryFee').val();
@@ -253,6 +295,7 @@
             }
             $('#totalDisplay').text(number_format(total));
             $('#total').val(total);
+            updateDouble11RewardHint(total, deliveryFee);
         };
         let noPayment = function (){
             $('#paymentMethod').val('noPayment');
@@ -306,6 +349,78 @@
             }
             flashTotal();
         };
+        let updateCouponSelection = function () {
+            let selected = $('#coupon').find('option:selected');
+            let couponId = selected.val();
+
+            if (!couponId) {
+                $('#couponCountWrapper').prop('hidden', true);
+                getCouponDiscount(undefined);
+                return;
+            }
+
+            let discountPerUnit = parseInt(selected.attr('discount')) || 0;
+            let minSpend = parseInt(selected.attr('min-spend')) || 0;
+            let isAccumulative = selected.attr('is-accumulative') === "1";
+            let holdingCount = parseInt(selected.attr('holding-count')) || 1;
+            let subtotal = parseInt($('#subtotal').val()) || 0;
+
+            if (minSpend > 0 && subtotal < minSpend) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'warning',
+                    title: '未達優惠券使用門檻',
+                    text: '此優惠券需商品金額滿 NT$' + number_format(minSpend) + ' 方可使用',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                $('#coupon').val('');
+                $('#couponCountWrapper').prop('hidden', true);
+                getCouponDiscount(undefined);
+                return;
+            }
+
+            if (isAccumulative && minSpend > 0) {
+                let maxAllowedByAmount = Math.floor(subtotal / minSpend);
+                let maxCanUse = Math.min(holdingCount, maxAllowedByAmount);
+
+                if (maxCanUse <= 0) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'warning',
+                        title: '未達優惠券使用門檻',
+                        text: '此優惠券每滿 NT$' + number_format(minSpend) + ' 可使用 1 張',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    $('#coupon').val('');
+                    $('#couponCountWrapper').prop('hidden', true);
+                    getCouponDiscount(undefined);
+                    return;
+                }
+
+                $('#couponCount').empty();
+                for (let i = 1; i <= maxCanUse; i++) {
+                    let disc = i * discountPerUnit;
+                    $('#couponCount').append('<option value="' + i + '">' + i + ' 張 (- NT$' + number_format(disc) + ')</option>');
+                }
+
+                $('#couponCount').val(maxCanUse);
+                $('#couponCountWrapper').prop('hidden', false);
+
+                let nextThreshold = (maxCanUse + 1) * minSpend;
+                if (holdingCount > maxCanUse) {
+                    $('#couponThresholdHint').text('滿 NT$' + number_format(nextThreshold) + ' 可再多用 1 張 (您持有 ' + holdingCount + ' 張)');
+                } else {
+                    $('#couponThresholdHint').text('已套用全部可使用的 ' + maxCanUse + ' 張折價券');
+                }
+
+                getCouponDiscount(maxCanUse * discountPerUnit);
+            } else {
+                $('#couponCountWrapper').prop('hidden', true);
+                getCouponDiscount(discountPerUnit);
+            }
+        };
         let flashPoint = function (total) {
             if($('#pointCheck').prop('checked') === true) {
                 let pointDiscount = $('#pointDiscount');
@@ -334,8 +449,13 @@
                 getInviteCodeDiscount(inviteCode);
             });
             $('#coupon').change(function(){
-                let couponDiscount = $(this).find('option:selected').attr('discount');
-                getCouponDiscount(couponDiscount);
+                updateCouponSelection();
+            });
+            $('#couponCount').change(function(){
+                let selected = $('#coupon').find('option:selected');
+                let discountPerUnit = parseInt(selected.attr('discount')) || 0;
+                let count = parseInt($(this).val()) || 1;
+                getCouponDiscount(count * discountPerUnit);
             });
             $('#pointCheck').click(function() {
                 flashTotal();

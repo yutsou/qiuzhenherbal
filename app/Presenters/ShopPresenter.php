@@ -182,10 +182,35 @@ class ShopPresenter
     public function presentCoupons($coupons)
     {
         $html = '';
-        foreach($coupons as $coupon) {
-            #if(Carbon::createFromFormat('Y-m-d H:i:s', $coupon->end_at)->gt($now) && Carbon::createFromFormat('Y-m-d H:i:s', $coupon->start_at)->lte($now)){
-            $html = $html.'<option value="'.$coupon->id.'" discount="'. $coupon->discount_price .'">'. $coupon->name .' - NT$'. number_format($coupon->discount_price) .'</option>';
+        $grouped = $coupons->groupBy(function($coupon) {
+            return $coupon->name . '_' . $coupon->discount_price . '_' . ($coupon->min_spend ?? 0) . '_' . ($coupon->is_accumulative ? 1 : 0);
+        });
+
+        foreach ($grouped as $group) {
+            $first = $group->first();
+            $count = $group->count();
+            $minSpend = intval($first->min_spend ?? 0);
+            $discountPrice = intval($first->discount_price);
+            $isAccumulative = $first->is_accumulative ? 1 : 0;
+
+            $label = $first->name;
+            if ($isAccumulative && $minSpend > 0) {
+                $label .= ' (每滿NT$' . number_format($minSpend) . '折NT$' . number_format($discountPrice) . '，持有 ' . $count . ' 張)';
+            } elseif ($minSpend > 0) {
+                $label .= ' (滿NT$' . number_format($minSpend) . '折NT$' . number_format($discountPrice) . ($count > 1 ? '，持有 ' . $count . ' 張' : '') . ')';
+            } else {
+                $label .= ' - NT$' . number_format($discountPrice) . ($count > 1 ? ' (持有 ' . $count . ' 張)' : '');
+            }
+
+            $html .= '<option value="' . $first->id . '" '
+                   . 'discount="' . $discountPrice . '" '
+                   . 'min-spend="' . $minSpend . '" '
+                   . 'is-accumulative="' . $isAccumulative . '" '
+                   . 'holding-count="' . $count . '">'
+                   . htmlspecialchars($label)
+                   . '</option>';
         }
+
         return $html;
     }
 }

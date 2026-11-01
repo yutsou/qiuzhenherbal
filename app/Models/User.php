@@ -63,12 +63,19 @@ class User extends Authenticatable
 
     public function coupons()
     {
-        return $this->belongsToMany(Coupon::class, 'user_coupon');
+        return $this->belongsToMany(Coupon::class, 'user_coupon')->withPivot('id', 'used')->withTimestamps();
     }
 
     public function getUnusedUnexpiredCouponsAttribute()
     {
-        return $this->coupons()->where('used', 0)->get()->where('expired', 0);
+        return $this->coupons()
+            ->where('used', 0)
+            ->where('expired', 0)
+            ->where(function ($query) {
+                $query->whereNull('end_at')
+                      ->orWhere('end_at', '>=', Carbon::now());
+            })
+            ->get();
     }
 
     public function orders()

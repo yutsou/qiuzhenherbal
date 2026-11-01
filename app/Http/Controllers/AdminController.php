@@ -382,11 +382,13 @@ class AdminController extends Controller
             $this->inviteCodeService->reductionInviteCode($order->invite_code, $order->total);
         }
         if ($order->coupon_id !== null) {
-            $this->couponService->reductionCoupon($order->user_id, $order->coupon_id);
+            $couponCount = $order->coupon_count ?? 1;
+            $this->couponService->reductionCoupon($order->user_id, $order->coupon_id, $couponCount);
         }
         if ($order->point_discount !== null) {
             $this->userService->reductionPoint($order->user_id, $order->point_discount);
         }
+        $this->couponService->revokeDouble11Coupons($orderId);
     }
 
     public function test()

@@ -15,4 +15,8 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function rewardedCoupons()
+    {
+        return $this->hasMany(Coupon::class, 'order_id');
+    }
 }

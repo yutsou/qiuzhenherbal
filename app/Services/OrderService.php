@@ -38,15 +38,47 @@ class OrderService extends OrderRepository
         if (Auth::check()){
             $input['user_id'] = Auth::user()->id;
 
-            AUth::user()->carts()->delete();
+            Auth::user()->carts()->delete();
 
             if($request->coupon !== null) {
-                $input['coupon_name'] = Coupon::find($request->coupon)->name;
+                $coupon = Coupon::find($request->coupon);
+                if ($coupon) {
+                    $couponCount = max(1, intval($request->couponCount ?? 1));
+
+                    // 後端驗證門檻：若有設定門檻，需符合小計要求
+                    if ($coupon->min_spend > 0) {
+                        $requiredSubtotal = $coupon->is_accumulative ? ($coupon->min_spend * $couponCount) : $coupon->min_spend;
+                        if ($request->subtotal < $requiredSubtotal) {
+                            abort(400, '未達優惠券使用門檻');
+                        }
+                    }
+
+                    // 驗證持有數量
+                    $holdingCount = Auth::user()->unusedUnexpiredCoupons->where('name', $coupon->name)->count();
+                    if ($holdingCount < $couponCount) {
+                        abort(400, '持有的優惠券張數不足');
+                    }
+
+                    $expectedDiscount = $coupon->discount_price * $couponCount;
+                    $input['coupon_id'] = $coupon->id;
+                    $input['coupon_count'] = $couponCount;
+                    $input['coupon_discount'] = $expectedDiscount;
+                    $input['coupon_name'] = $couponCount > 1 ? ($coupon->name . ' x' . $couponCount) : $coupon->name;
+                }
+            } else {
+                $input['coupon_id'] = null;
+                $input['coupon_count'] = 1;
+                $input['coupon_discount'] = null;
+                $input['coupon_name'] = null;
             }
         } else {
             setcookie("skuIds", "", time() - 3600);
             setcookie("quantities", "", time() - 3600);
             $input['user_id'] = null;
+            $input['coupon_id'] = null;
+            $input['coupon_count'] = 1;
+            $input['coupon_discount'] = null;
+            $input['coupon_name'] = null;
         }
 
         if($request->paymentMethod === "creditCard") {
@@ -220,6 +252,11 @@ class OrderService extends OrderRepository
                 break;
         }
         OrderRepository::update($input, $orderId);
+
+        if (isset($input['delivery_status']) && $input['delivery_status'] == 1) {
+            $completedOrder = $this->getOrder($orderId);
+            app(CouponService::class)->rewardDouble11Coupons($completedOrder);
+        }
     }
 
     public function cancelOrder($orderId)

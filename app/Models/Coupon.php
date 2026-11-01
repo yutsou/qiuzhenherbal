@@ -13,7 +13,14 @@ class Coupon extends Model
     protected $casts = [
         'start_at' => 'datetime',
         'end_at' => 'datetime',
+        'is_accumulative' => 'boolean',
+        'min_spend' => 'decimal:2',
     ];
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 
     public function getStartAtDateMinAttribute()
     {

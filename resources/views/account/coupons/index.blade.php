@@ -27,7 +27,12 @@
                 <tbody>
                 @foreach($coupons as $coupon)
                     <tr>
-                        <td>{{ $coupon->name }}</td>
+                        <td>
+                            {{ $coupon->name }}
+                            @if($coupon->min_spend > 0)
+                                <br><small class="uk-text-muted">（{{ $coupon->is_accumulative ? '每滿' : '滿' }} NT${{ number_format($coupon->min_spend) }} 可折抵{{ $coupon->is_accumulative ? '一張' : '' }}）</small>
+                            @endif
+                        </td>
                         <td>NT${{ number_format($coupon->discount_price) }}</td>
                         <td><span class="uk-hidden@m">起始日期：</span>{{ $coupon->startAtDateMin }}</td>
                         <td><span class="uk-hidden@m">截止日期：</span>{{ $coupon->endAtDateMin }}</td>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CustomFacades\CustomClass;
 use App\Jobs\SendEmail;
+use App\Models\User;
 use App\Services\CartService;
 use App\Services\CategoryService;
 use App\Services\CouponService;
@@ -290,9 +291,13 @@ class ShopController extends Controller
 
     private function useCouponAndPointAndInviteCode($order)
     {
-        if(Auth::check()) {
+        $userId = $order->user_id ?? (Auth::check() ? Auth::user()->id : null);
+        $user = $userId ? User::find($userId) : null;
+
+        if($user) {
             if($order->coupon_id !== null) {
-                $this->couponService->useCoupon($order->coupon_id);
+                $couponCount = $order->coupon_count ?? 1;
+                $this->couponService->useCoupon($order->coupon_id, $user, $couponCount);
             }
             if($order->point_discount !== null) {
                 $this->userService->usePoint($order->point_discount);
@@ -338,6 +343,7 @@ class ShopController extends Controller
         $orderId = $this->orderService->getOrderIdByMerchantTradeNo($request->MerchantTradeNo, 0);
         $order = $this->orderService->getOrder($orderId);
         if($order->payment_method == "CVSPay" || $order->payment_method == "noPayment") {
+            $this->useCouponAndPointAndInviteCode($order);
             return redirect(route('account.orders.show', $order))->with('Success', '訂單建立成功');
         } else {
             return redirect(route('shop.pay', $order));
