@@ -11,7 +11,7 @@
 
                     <ul class="uk-slideshow-items">
                         <li>
-                            <img src="{{ asset("/images/web/banners/double11-2-1.jpg") }}" uk-cover>
+                            <img src="{{ asset("/images/web/banners/double11-2-2.jpg") }}" uk-cover>
                         </li>
                         <li>
                             <img src="{{ asset("/images/web/banners/banner-4-2.jpg") }}" uk-cover>
@@ -43,7 +43,7 @@
 
                     <ul class="uk-slideshow-items">
                         <li>
-                            <img src="{{ asset("/images/web/banners/double11-2-1-m.jpg") }}">
+                            <img src="{{ asset("/images/web/banners/double11-2-2-m.jpg") }}">
                         </li>
                         <li>
                             <img src="{{ asset("/images/web/banners/banner-4-2-m.jpg") }}">
